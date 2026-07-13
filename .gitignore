@@ -1,0 +1,26 @@
+# Build output (binaries + leaked WebView2 browser profiles)
+**/bin/
+**/obj/
+
+# User-local config overlays (keep *.example templates)
+config/*.local.json
+config/profiles/*.local.json
+config/presets.local.json
+config/gui-links.local.json
+config/gui.local.json
+config/pty-size-presets.local.json
+gui-links.local.json
+
+# WebView2 / Chromium runtime data (contains real browser History/Cookies)
+**/WebView2/
+**/EBWebView/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.suo
+*.user
+.vs/
+
+# Logs
+*.log

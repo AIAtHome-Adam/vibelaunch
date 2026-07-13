@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VibeLaunch defaults",
+  "type": "object",
+  "properties": {
+    "profile": { "enum": ["standalone", "wsl-remote"] },
+    "vibettyPath": { "type": "string" },
+    "bindAddr": { "type": "string" },
+    "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+    "keypadHost": { "type": "string" },
+    "keypadUrlTemplate": { "type": "string" },
+    "logDir": { "type": "string" },
+    "cwd": { "type": "string" },
+    "defaultPreset": { "type": "string" },
+    "confirmKill": {
+      "type": "object",
+      "properties": {
+        "hermes": { "type": "boolean" },
+        "openclaw": { "type": "boolean" },
+        "claude": { "type": "boolean" },
+        "codex": { "type": "boolean" }
+      }
+    },
+    "wsl": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "user": { "type": "string" },
+        "distro": { "type": ["string", "null"] }
+      }
+    },
+    "workspaces": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "gui": {
+      "type": "object",
+      "properties": {
+        "hideVibettyConsole": { "type": "boolean" },
+        "defaultCols": { "type": "integer", "minimum": 20, "maximum": 200 },
+        "defaultRows": { "type": "integer", "minimum": 5, "maximum": 500 },
+        "theme": { "enum": ["light", "dark", "system"] }
+      }
+    }
+  }
+}

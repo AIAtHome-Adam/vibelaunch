@@ -1,0 +1,32 @@
+{
+  "profile": "standalone",
+  "vibettyPath": "C:\\Program Files (x86)\\Vibekeys\\vibetty.exe",
+  "bindAddr": "0.0.0.0",
+  "port": 3000,
+  "keypadHost": "localhost",
+  "keypadUrlTemplate": "ws://{{host}}:{{port}}/ws",
+  "logDir": "{{workspaces.default}}",
+  "cwd": "{{workspaces.default}}",
+  "defaultPreset": "codex",
+  "confirmKill": {
+    "hermes": true,
+    "openclaw": true,
+    "claude": false,
+    "codex": false
+  },
+  "wsl": {
+    "enabled": false,
+    "user": "",
+    "distro": null
+  },
+  "workspaces": {
+    "default": "C:\\Users\\<windows-user>\\Documents\\Workspaces\\Example-Workspace",
+    "default-wsl": "/mnt/c/Users/<windows-user>/Documents/Workspaces/Example-Workspace"
+  },
+  "gui": {
+    "hideVibettyConsole": true,
+    "defaultCols": 35,
+    "defaultRows": 200,
+    "theme": "system"
+  }
+}

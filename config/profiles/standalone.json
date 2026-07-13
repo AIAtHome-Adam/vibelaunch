@@ -1,0 +1,10 @@
+{
+  "profile": "standalone",
+  "port": 3000,
+  "bindAddr": "0.0.0.0",
+  "wsl": {
+    "enabled": false,
+    "user": "",
+    "distro": null
+  }
+}

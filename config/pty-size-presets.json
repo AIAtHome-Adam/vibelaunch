@@ -1,0 +1,5 @@
+[
+  { "label": "VibeKeys (35x200)", "cols": 35, "rows": 200 },
+  { "label": "Keypad focus (35x20)", "cols": 35, "rows": 20 },
+  { "label": "Desktop (80x24)", "cols": 80, "rows": 24 }
+]

@@ -1,0 +1,207 @@
+{
+  "claude": {
+    "label": "Claude Code",
+    "tokens": ["claude"],
+    "tags": ["windows", "claude"],
+    "platform": "windows",
+    "spawn": ["claude"],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Fresh Claude Code session. Resume: vibelaunch claude-resume (or claude -c). Add flags via presets.local.json args."
+  },
+  "claude-resume": {
+    "label": "Claude Code (resume)",
+    "tokens": ["claude", "resume"],
+    "tags": ["windows", "claude"],
+    "platform": "windows",
+    "spawn": ["claude"],
+    "cwd": "{{workspaces.default}}",
+    "args": ["-c", "--dangerously-skip-permissions"],
+    "notes": "Continues the most recent Claude Code session (-c). Same cwd as claude preset."
+  },
+  "codex": {
+    "label": "Codex (config cwd)",
+    "tokens": ["codex"],
+    "tags": ["windows", "codex"],
+    "platform": "windows",
+    "spawn": ["codex"],
+    "cwd": "{{cwd}}",
+    "args": [],
+    "notes": "Interactive Codex TUI at config cwd (defaults.json cwd / your defaults.local.json)."
+  },
+  "codex-workspace": {
+    "label": "Codex -> example workspace",
+    "tokens": ["codex", "workspace"],
+    "tags": ["windows", "codex"],
+    "platform": "windows",
+    "spawn": ["codex"],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Codex in the configured example workspace. Override workspaces.default in defaults.local.json."
+  },
+  "cmd-scroll-test": {
+    "label": "cmd.exe scrollback test",
+    "tokens": ["cmd", "scroll", "test"],
+    "tags": ["windows", "test"],
+    "platform": "windows",
+    "spawn": ["cmd.exe"],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Diagnostic normal-buffer shell. At prompt: for /L %i in (1,1,100) do @echo line %i - then scroll with keypad/PC to verify rows depth."
+  },
+  "hermes-vk": {
+    "label": "Hermes (VibeKeys)",
+    "tokens": ["hermes"],
+    "tags": ["hermes"],
+    "platform": "auto",
+    "spawnWsl": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "HERMES_VIBEKEYS_SESSION=1 hermes chat --skills vibekeys-hermes"
+    ],
+    "spawnWindows": [
+      "cmd.exe", "/c", "set HERMES_VIBEKEYS_SESSION=1&& hermes chat --skills vibekeys-hermes"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Auto: WSL if profile wsl.enabled + hermes in WSL, else Windows PATH. Override: vibelaunch hermes wsl | vibelaunch hermes windows."
+  },
+  "hermes-vk-wsl": {
+    "label": "Hermes (VibeKeys, WSL)",
+    "tokens": ["hermes", "wsl"],
+    "tags": ["hermes", "wsl"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "HERMES_VIBEKEYS_SESSION=1 hermes chat --skills vibekeys-hermes"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Force WSL even when Hermes is also on Windows PATH. Requires wsl.user."
+  },
+  "hermes-vk-win": {
+    "label": "Hermes (VibeKeys, Windows)",
+    "tokens": ["hermes", "windows"],
+    "tags": ["hermes", "windows"],
+    "platform": "windows",
+    "spawn": [
+      "cmd.exe", "/c", "set HERMES_VIBEKEYS_SESSION=1&& hermes chat --skills vibekeys-hermes"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Force native Windows Hermes (Hermes Desktop / CLI on PATH). No WSL."
+  },
+  "hermes-codex-workspace": {
+    "label": "Hermes + Codex model (WSL)",
+    "tokens": ["hermes", "codex", "workspace"],
+    "tags": ["hermes", "wsl"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "HERMES_VIBEKEYS_SESSION=1 hermes chat --skills vibekeys-hermes -m openai-codex/gpt-5.4"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "WSL Hermes with Codex model at spawn (-m openai-codex/gpt-5.4). Change model in spawn or use /model inside chat."
+  },
+  "hermes-codex-workspace-win": {
+    "label": "Hermes + Codex model (Windows)",
+    "tokens": ["hermes", "codex", "windows"],
+    "tags": ["hermes", "windows"],
+    "platform": "windows",
+    "spawn": [
+      "cmd.exe", "/c", "set HERMES_VIBEKEYS_SESSION=1&& hermes chat --skills vibekeys-hermes -m openai-codex/gpt-5.4"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Windows Hermes with Codex model at spawn. WSL Codex auth is separate from Windows user config."
+  },
+  "openclaw-vk": {
+    "label": "OpenClaw TUI (vibekeys session)",
+    "tokens": ["openclaw"],
+    "tags": ["openclaw", "wsl"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic", "openclaw tui --session vibekeys"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "WSL only (no native Windows OpenClaw companion yet). --session vibekeys avoids main-session heartbeat spam."
+  },
+  "openclaw-tui": {
+    "label": "OpenClaw TUI (main session)",
+    "tokens": ["openclaw", "main"],
+    "tags": ["openclaw", "wsl"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic", "openclaw tui"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "WSL gateway main session (no --session). Heartbeat/status polls may appear on small screens; prefer openclaw-vk for keypad."
+  },
+  "openclaw-cursor-workspace": {
+    "label": "OpenClaw -> Cursor ACP",
+    "tokens": ["openclaw", "cursor", "workspace"],
+    "tags": ["openclaw", "wsl", "acp"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "openclaw tui --message \"/acp spawn cursor --cwd {{workspaces.default-wsl}} --mode persistent\""
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "ACP harness spawn at launch via --message. Requires your OpenClaw ACP config (cursor harness, cwd, auth)."
+  },
+  "openclaw-codex-workspace": {
+    "label": "OpenClaw -> Codex ACP",
+    "tokens": ["openclaw", "codex", "workspace"],
+    "tags": ["openclaw", "wsl", "acp"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "openclaw tui --message \"/acp spawn codex --cwd {{workspaces.default-wsl}} --mode persistent\""
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "ACP harness id codex per OpenClaw agents docs. Requires local ACP harness + Codex auth in WSL."
+  },
+  "hermes-acp-cursor": {
+    "label": "Hermes -> Cursor ACP (drop-in)",
+    "tokens": ["hermes", "acp", "cursor"],
+    "tags": ["hermes", "wsl", "acp", "hermes-acp"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "python3 ~/bin/hermes-acp-client.py shell cursor --cwd {{workspaces.default-wsl}} --approve"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Hermes ACP *client* drop-in to a live Cursor session. Spawns persistent shell; type prompts, 'exit' quits. Requires Cursor Pro `agent` auth. Verified 2026-07-12."
+  },
+  "hermes-acp-claude": {
+    "label": "Hermes -> Claude Code ACP (drop-in)",
+    "tokens": ["hermes", "acp", "claude"],
+    "tags": ["hermes", "wsl", "acp", "hermes-acp"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "python3 ~/bin/hermes-acp-client.py shell claude --cwd {{workspaces.default-wsl}} --approve"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Hermes ACP *client* drop-in to Claude Code via npx @agentclientprotocol/claude-agent-acp. Requires Node + Claude Pro auth. Verified 2026-07-12."
+  },
+  "hermes-acp-codex": {
+    "label": "Hermes -> Codex ACP (drop-in)",
+    "tokens": ["hermes", "acp", "codex"],
+    "tags": ["hermes", "wsl", "acp", "hermes-acp"],
+    "platform": "wsl",
+    "spawn": [
+      "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
+      "python3 ~/bin/hermes-acp-client.py shell codex --cwd {{workspaces.default-wsl}} --approve"
+    ],
+    "cwd": "{{workspaces.default}}",
+    "args": [],
+    "notes": "Hermes ACP *client* drop-in to Codex via npx @zed-industries/codex-acp. Requires Node + Codex ChatGPT auth (codex login). NOTE: adapter + handshake verified 2026-07-12; if prompt 401s, run `codex login` (token can be invalidated)."
+  }
+}

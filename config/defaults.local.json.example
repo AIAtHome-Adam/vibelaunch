@@ -1,0 +1,9 @@
+{
+  "profile": "wsl-remote",
+  "port": 3001,
+  "keypadHost": "<LAN-IP>",
+  "wsl": {
+    "enabled": true,
+    "user": "<wsl-user>"
+  }
+}

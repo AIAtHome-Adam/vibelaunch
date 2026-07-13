@@ -1,0 +1,15 @@
+{
+  "profile": "wsl-remote",
+  "port": 3001,
+  "bindAddr": "0.0.0.0",
+  "keypadHost": "<LAN-IP>",
+  "wsl": {
+    "enabled": true,
+    "user": "<wsl-user>",
+    "distro": null
+  },
+  "workspaces": {
+    "default": "C:\\Users\\<windows-user>\\Documents\\Workspaces\\Example-Workspace",
+    "default-wsl": "/mnt/c/Users/<windows-user>/Documents/Workspaces/Example-Workspace"
+  }
+}
