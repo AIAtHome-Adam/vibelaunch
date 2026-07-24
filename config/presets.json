@@ -146,7 +146,7 @@
     "platform": "wsl",
     "spawn": [
       "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
-      "openclaw tui --message \"/acp spawn cursor --cwd {{workspaces.default-wsl}} --mode persistent\""
+      "openclaw tui --message '/acp spawn cursor --cwd {{workspaces.default-wsl}} --mode persistent'"
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
@@ -159,7 +159,7 @@
     "platform": "wsl",
     "spawn": [
       "wsl.exe", "-u", "{{wsl.user}}", "bash", "-lic",
-      "openclaw tui --message \"/acp spawn codex --cwd {{workspaces.default-wsl}} --mode persistent\""
+      "openclaw tui --message '/acp spawn codex --cwd {{workspaces.default-wsl}} --mode persistent'"
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],

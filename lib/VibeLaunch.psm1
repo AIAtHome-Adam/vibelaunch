@@ -1027,6 +1027,10 @@ function Expand-VibeLaunchTemplate {
         [hashtable]$Config
     )
     if ([string]::IsNullOrEmpty($Text)) { return $Text }
+    # Resolve {{cwd}} before workspace tokens because the shipped cwd itself is
+    # {{workspaces.default}}. Doing this last leaves a nested token unresolved.
+    $cwdVal = [string]$Config['cwd']
+    $Text = $Text -replace '\{\{cwd\}\}', $cwdVal
     $workspaces = $Config['workspaces']
     if ($workspaces -is [hashtable]) {
         foreach ($k in $workspaces.Keys) {
@@ -1041,8 +1045,6 @@ function Expand-VibeLaunchTemplate {
     $wslUserVal = ''
     if ($Config['wsl'] -is [hashtable]) { $wslUserVal = [string]$Config['wsl']['user'] }
     $Text = $Text -replace '\{\{wsl\.user\}\}', $wslUserVal
-    $cwdVal = [string]$Config['cwd']
-    $Text = $Text -replace '\{\{cwd\}\}', $cwdVal
     return $Text
 }
 
@@ -1359,7 +1361,8 @@ function Resolve-VibeLaunchPresetSpawnSource {
         return @{ Items = $items; RequiresWsl = $true; Resolved = 'wsl' }
     }
     if ($platform -eq 'windows') {
-        $items = if ($Preset.spawnWindows) { @($Preset.spawnWindows) } else { @($Preset.spawn) }
+        $hasSpawnWindows = $null -ne $Preset.PSObject.Properties['spawnWindows']
+        $items = if ($hasSpawnWindows -and $Preset.spawnWindows) { @($Preset.spawnWindows) } else { @($Preset.spawn) }
         return @{ Items = $items; RequiresWsl = $false; Resolved = 'windows' }
     }
     if ($platform -eq 'auto') {
@@ -1569,7 +1572,9 @@ function Build-VibeLaunchSpawnArgv {
     if ($Preset.args) { $args += Expand-VibeLaunchArray -Items @($Preset.args) -Config $Config }
     if ($ExtraArgs) { $args += $ExtraArgs }
 
-    $merged = if ($args.Count -gt 0) { @($spawn + $args) } else { $spawn }
+    # Force array semantics: when each side has one item, PowerShell otherwise
+    # treats `+` as string concatenation (for example `claude` + `-c`).
+    $merged = if ($args.Count -gt 0) { @($spawn) + @($args) } else { @($spawn) }
     return ConvertTo-VibeLaunchVibettySpawn -SpawnArgv @($merged)
 }
 
