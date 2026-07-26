@@ -94,6 +94,6 @@ Keypad: reconnect WebSocket if needed.
 - **In-session UX** on the keypad (short lines) = [`vibekeys-hermes`](../vibekeys-hermes/SKILL.md) / [`vibekeys-openclaw`](../vibekeys-openclaw/SKILL.md) — separate skills.
 - WSL-remote example profile uses port **3001**; standalone default **3000**.
 - OpenClaw ACP presets (`openclaw-cursor-workspace`, `openclaw-codex-workspace`) need local ACP harness config.
-- Hermes ACP presets need `~/bin/hermes-acp-client.py` (see [HERMES_ACP_CLIENT.md](../../docs/HERMES_ACP_CLIENT.md)) and [Hermes #5257](https://github.com/NousResearch/hermes-agent/issues/5257) for the upstream ask.
+- Hermes ACP presets need `~/bin/hermes-acp-client.py` (see [HERMES_ACP_CLIENT.md](../../docs/HERMES_ACP_CLIENT.md)). Upstream: [#5257](https://github.com/NousResearch/hermes-agent/issues/5257) is the design issue; [#68222](https://github.com/NousResearch/hermes-agent/pull/68222) is the active successor.
 
 Full roadmap: [docs/VIBEKEYS_AGENT_SKILLS.md](../../docs/VIBEKEYS_AGENT_SKILLS.md).

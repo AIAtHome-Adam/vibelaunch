@@ -328,7 +328,7 @@ Copy a skill into your Hermes/OpenClaw skills directory to enable it; VibeLaunch
 | **Mid-session preset switch** | Keep vibetty + keypad WebSocket alive; swap PTY child without keypad reconnect. Needs upstream vibetty support or a wrapper — today `--force` relaunches vibetty and the keypad must reconnect. |
 | **Session parking / juggling** | Park multiple agent sessions and hop between them without full restart. Separate from mid-session switch; heavier UX + process model. |
 | OpenClaw ACP presets (`openclaw-cursor-workspace`, `openclaw-codex-workspace`) | Presets exist; needs local harness setup + hardware test |
-| Hermes ACP presets (`hermes-acp-*`) | Verified stopgap — see [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md); boost [Hermes #5257](https://github.com/NousResearch/hermes-agent/issues/5257) for native support |
+| Hermes ACP presets (`hermes-acp-*`) | Verified stopgap — see [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md); [#5257](https://github.com/NousResearch/hermes-agent/issues/5257) is the design issue and [#68222](https://github.com/NousResearch/hermes-agent/pull/68222) is the active successor |
 | Named session join | Launch into an ongoing Discord / channel session by session key |
 | OpenClaw VibeKeys theming | Compact TUI beyond `vibekeys-openclaw` — see [VIBEKEYS_AGENT_SKILLS.md](docs/VIBEKEYS_AGENT_SKILLS.md) |
 | Tailscale away-from-home | Keypad over tailnet — not tested |
@@ -350,8 +350,10 @@ python3 tools/hermes-acp-client.py shell cursor --cwd /path/to/repo --approve
 ```
 
 Full docs: [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md). This is a stopgap
-for the upstream Hermes ask — **[issue #5257](https://github.com/NousResearch/hermes-agent/issues/5257)**
-(generalized ACP client in core). Boost it if you want this shipped natively.
+for the upstream Hermes work: **[#5257](https://github.com/NousResearch/hermes-agent/issues/5257)**
+is the design issue, #5258 was the original implementation, and
+**[#68222](https://github.com/NousResearch/hermes-agent/pull/68222)** is the active
+successor. Boost/follow #5257 and #68222 if you want this shipped natively.
 
 ---
 

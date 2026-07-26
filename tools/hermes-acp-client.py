@@ -11,10 +11,11 @@ The protocol implementation mirrors Hermes's own bundled
 `agent/copilot_acp_client.py` (which drives `copilot --acp`), so it tracks
 the real, working reference rather than a guess.
 
-Upstream context: Hermes issue #5257 ("Generalized ACP client for
-multi-agent CLI orchestration") proposes the same thing in core. This script
-is a standalone, dependency-free stopgap until that lands — it converges with
-#5257 and can be retired once `hermes --provider {agent}-acp` ships.
+Upstream context: Hermes issue #5257 is the generalized-ACP design issue;
+PR #5258 was the original implementation; PR #68222 is the active successor
+as of 2026-07-25 (#32401 is the larger native-transport alternative). This
+script is a standalone, dependency-free stopgap until current native support
+lands and covers the required session, approval, MCP, and provider behavior.
 
 Agents (command resolved via env override HERMES_ACP_{NAME}_COMMAND):
   cursor  -> agent acp                  (Cursor Pro CLI; ACP server mode)

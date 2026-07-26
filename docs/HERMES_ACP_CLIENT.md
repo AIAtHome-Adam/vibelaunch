@@ -23,16 +23,37 @@ gave, but built natively on Hermes.
 
 ## Upstream context (please boost)
 
-This is a stopgap. The same capability is proposed in core Hermes as
-[Hermes issue #5257](https://github.com/NousResearch/hermes-agent/issues/5257)
-("Generalized ACP client for multi-agent CLI orchestration") — `hermes --provider
-{agent}-acp` + a 14-agent registry. It is **open / P3 / needs-decision**.
-If you want this upstream, **comment + 👍 on #5257** — community signal moves
-it forward. A working reference fork exists at
-`flowforgelab/hermes-agent@feat/acpx-plugin`.
+This remains a stopgap, but the upstream lineage has changed:
 
-When #5257 lands, retire this client and point VibeLaunch presets at the native
-Hermes provider instead.
+- [Issue #5257](https://github.com/NousResearch/hermes-agent/issues/5257) is the
+  original **design issue**: "Generalized ACP client for multi-agent CLI
+  orchestration."
+- [PR #5258](https://github.com/NousResearch/hermes-agent/pull/5258) was the
+  original 14-agent implementation. It was closed as a draft; its old fork
+  predates major Hermes refactors and is effectively superseded.
+- [PR #68222](https://github.com/NousResearch/hermes-agent/pull/68222) is the
+  **active successor** rebased onto modern Hermes. As checked **2026-07-25**, it
+  is open, non-draft, `P4` / `needs-decision`, supports Claude, Codex, Gemini,
+  Qwen, and Copilot, and routes Hermes approval policies. Its known gap is that
+  Hermes-configured MCP servers are not yet forwarded into spawned ACP sessions.
+- [PR #32401](https://github.com/NousResearch/hermes-agent/pull/32401) is the
+  larger architectural alternative: a native `api_mode: acp_client` transport.
+  The Claude-only [PR #68050](https://github.com/NousResearch/hermes-agent/pull/68050)
+  was closed in favor of #68222.
+
+If you want native support, **comment + 👍 on #5257 and follow/boost #68222**.
+The accurate shorthand is: **#5257 is the design issue; #5258 was the original
+implementation; #68222 is the active successor.** Keep this client until a
+current upstream implementation lands and covers VibeLaunch's session,
+approval, MCP-forwarding, and provider-integration needs.
+
+### Buzz connection
+
+[Buzz PR #2773](https://github.com/block/buzz/pull/2773) bundles Hermes and
+OpenClaw as ACP harness presets. It does not directly mention #5257/#5258/#68222,
+but it strongly validates ACP as the shared harness boundary. The directions are
+complementary: Buzz hosts/drives Hermes and other harnesses, while #68222 would
+let Hermes itself drive Claude/Codex/Gemini/Qwen/Copilot outside Buzz.
 
 ## Install the client
 

@@ -15,7 +15,7 @@ You are in a **VibeKeys keypad session** — ~**35 columns × 10 rows** on the O
 
 **Session switching** is **not** this skill — the operator uses VibeLaunch / `/vibekeys` from another channel, or restarts vibetty manually.
 
-For **Hermes → Cursor/Claude/Codex drop-in** (ACP client), use VibeLaunch presets `hermes-acp-cursor` / `hermes-acp-claude` / `hermes-acp-codex` or `/vibekeys hermes-acp-*`. See [HERMES_ACP_CLIENT.md](../../docs/HERMES_ACP_CLIENT.md) and upstream [Hermes #5257](https://github.com/NousResearch/hermes-agent/issues/5257).
+For **Hermes → Cursor/Claude/Codex drop-in** (ACP client), use VibeLaunch presets `hermes-acp-cursor` / `hermes-acp-claude` / `hermes-acp-codex` or `/vibekeys hermes-acp-*`. See [HERMES_ACP_CLIENT.md](../../docs/HERMES_ACP_CLIENT.md). Upstream: [#5257](https://github.com/NousResearch/hermes-agent/issues/5257) is the design issue; [#68222](https://github.com/NousResearch/hermes-agent/pull/68222) is the active successor.
 
 ---
 

@@ -84,7 +84,7 @@ Voice on the keypad uses vibetty's **configured ASR provider** (for example Groq
 | Cursor ACP fails auth | `agent login` (Cursor Pro) |
 | Claude ACP fails | Node + `npx @agentclientprotocol/claude-agent-acp` + Claude Pro |
 | Codex ACP 401 | `codex login` in WSL |
-| Want native Hermes ACP | Track / comment on [Hermes #5257](https://github.com/NousResearch/hermes-agent/issues/5257) |
+| Want native Hermes ACP | [#5257](https://github.com/NousResearch/hermes-agent/issues/5257) is the design issue; track/boost active successor [#68222](https://github.com/NousResearch/hermes-agent/pull/68222) |
 
 ## Manual vibetty (escape hatch)
 
