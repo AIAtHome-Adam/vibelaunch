@@ -35,8 +35,9 @@ public partial class HelpWindow : Wpf.Ui.Controls.FluentWindow
             }
 
             await HelpWebView.EnsureCoreWebView2Async(_environment);
-            var html = HelpContentRenderer.MarkdownFileToHtmlDocument(_markdownPath, _pageTitle, _darkTheme);
-            HelpWebView.NavigateToString(html);
+            // Prefer file:// HTML so rewritten relative links (sibling .md → .html) navigate cleanly.
+            var htmlPath = HelpContentRenderer.RenderMarkdownFileToHtmlFile(_markdownPath, _pageTitle, _darkTheme);
+            HelpWebView.CoreWebView2.Navigate(new Uri(htmlPath).AbsoluteUri);
             LoadingText.Visibility = Visibility.Collapsed;
         }
         catch (Exception ex)

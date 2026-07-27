@@ -24,3 +24,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local validation / operator evidence (not shipped)
+.validation-cursor-acp/
+review-artifacts/

@@ -317,9 +317,21 @@ function Get-VibeLaunchGuiLinks {
         $links['vibekeysConfigurator'] = Resolve-VibeLaunchVibekeysInstallDir -Config $cfg
     }
 
-    $runbook = Join-Path $paths.Root 'docs\VIBEKEYS_REMOTE.md'
-    if (Test-Path -LiteralPath $runbook) {
-        $links['runbookPath'] = (Resolve-Path -LiteralPath $runbook).Path
+    if ([string]::IsNullOrWhiteSpace([string]$links['runbookPath'])) {
+        $runbook = Join-Path $paths.Root 'docs\VIBEKEYS_REMOTE.md'
+        if (Test-Path -LiteralPath $runbook) {
+            $links['runbookPath'] = (Resolve-Path -LiteralPath $runbook).Path
+        }
+    }
+    elseif (-not (Test-Path -LiteralPath ([string]$links['runbookPath']))) {
+        # Stale override — fall back to shipped runbook when present.
+        $runbook = Join-Path $paths.Root 'docs\VIBEKEYS_REMOTE.md'
+        if (Test-Path -LiteralPath $runbook) {
+            $links['runbookPath'] = (Resolve-Path -LiteralPath $runbook).Path
+        }
+    }
+    else {
+        $links['runbookPath'] = (Resolve-Path -LiteralPath ([string]$links['runbookPath'])).Path
     }
 
     return $links
@@ -578,7 +590,7 @@ function Set-VibeLaunchConsoleGeometry {
 }
 
 # vibetty sizes its ConPTY from crossterm::terminal::size() minus TUI chrome
-# (4 cols / 6 rows — header+footer borders). Post-launch AttachConsole cannot
+# (4 cols / 6 rows - header+footer borders). Post-launch AttachConsole cannot
 # shrink the buffer (ERROR_INVALID_PARAMETER); size must be set BEFORE spawn.
 # Keypad Sync also clamps width to 35 cols (upstream vibetty).
 $script:VibeLaunchTuiColsPadding = 4
@@ -659,7 +671,7 @@ function Start-VibeLaunchVibettyProcess {
         $vibettyLine
     ) | Set-Content -LiteralPath $bat -Encoding ASCII
 
-    # Same console as mode con — do not use `start` (new console loses geometry).
+    # Same console as mode con - do not use `start` (new console loses geometry).
     $cmdProc = Start-Process -FilePath "$env:SystemRoot\System32\cmd.exe" `
         -ArgumentList @('/c', "`"$bat`"") `
         -WorkingDirectory $WorkingDirectory `
@@ -989,7 +1001,15 @@ function Resolve-VibeLaunchWorkspacePaths {
     $ws = $Config['workspaces']
     if ($ws -isnot [hashtable]) { return }
 
-    $repoUsable = $RepoRoot -and (Test-Path -LiteralPath $RepoRoot) -and ($RepoRoot -notlike "$env:ProgramFiles\*") -and ($RepoRoot -notlike "${env:ProgramFiles(x86)}\*")
+    # Exclude Program Files roots themselves (installed layout uses
+    # RepoRoot = parent of C:\Program Files\VibeLaunch -> "C:\Program Files").
+    # -notlike 'C:\Program Files\*' does not match the exact install root path.
+    $pf = [string]$env:ProgramFiles
+    $pfx86 = [string]${env:ProgramFiles(x86)}
+    $repoUsable = $RepoRoot -and (Test-Path -LiteralPath $RepoRoot) -and
+        ($RepoRoot -ne $pf) -and ($RepoRoot -ne $pfx86) -and
+        (-not $pf -or $RepoRoot -notlike "$pf\*") -and
+        (-not $pfx86 -or $RepoRoot -notlike "$pfx86\*")
 
     $winPath = [string]$ws['default']
     if (([string]::IsNullOrWhiteSpace($winPath) -or $winPath -match '<[^>]+>') -and $repoUsable) {
@@ -1513,12 +1533,55 @@ function Get-VibeLaunchStatusText {
     ) -join "`n"
 }
 
+function Get-VibeLaunchHelpText {
+    @(
+        'VibeLaunch - Windows vibetty session launcher for VibeKeys',
+        '',
+        'Usage:',
+        '  vibelaunch                         Launch defaultPreset from config',
+        '  vibelaunch <preset|tokens...> [flags] Resolve hybrid tokens and launch',
+        '  vibelaunch list                     Presets + notes + platform hints',
+        '  vibelaunch help                     This help',
+        '  vibelaunch status [--json]          Port, PID, preset, keypad URL',
+        '  vibelaunch preflight [--json]       PATH, port, firewall, WSL checks',
+        '  vibelaunch stop [--force]          Kill vibetty tree on configured port',
+        '  vibelaunch config path              Show config file locations',
+        '  vibelaunch paths [--json]           Install / user config paths',
+        '  vibelaunch run --spawn ''...'' [--cwd ''...'']  Raw spawn escape hatch',
+        '',
+        'VibeLaunch-only launch flags (never passed through to agents):',
+        '  --force                 Kill existing vibetty on the port and switch preset',
+        '  --dry-run               Print resolved cwd/spawn; skip kill prompt and launch',
+        '  --wait                  Block in this console instead of detaching',
+        '  --gui                   Apply saved GUI geometry + hide-console preference',
+        '  --cols N / --rows N     PTY size at launch (also --cols=N --rows=N)',
+        '  --hide-console          Hide the separate vibetty console window',
+        '  --show-console          Show the vibetty console window',
+        '  -- <args...>              Passthrough args appended to the preset spawn',
+        '',
+        'Examples:',
+        '  vibelaunch list',
+        '  vibelaunch codex-workspace --force',
+        '  vibelaunch claude -- -c --dangerously-skip-permissions',
+        '  vibelaunch hermes wsl --dry-run',
+        '  vibelaunch openclaw --force',
+        '',
+        'Notes:',
+        '  * Manages Windows vibetty only - does not start/stop WSL gateways.',
+        '  * WSL presets need wsl.enabled + non-placeholder wsl.user (setup-wsl-remote.ps1).',
+        '  * OpenClaw presets are WSL-only. Hermes auto prefers WSL when available.',
+        '  * Per-preset purpose/prereqs/failures: vibelaunch list',
+        '  * Full docs: README.md, docs/VIBEKEYS_REMOTE.md, docs/HERMES_ACP_CLIENT.md'
+    ) -join "`n"
+}
+
 function Get-VibeLaunchListText {
     $presets = Get-VibeLaunchPresets
     $cfg = (Get-VibeLaunchConfig).Config
     $default = [string]$cfg['defaultPreset']
     $lines = New-Object System.Collections.Generic.List[string]
     $lines.Add('Presets (default: ' + $(if ($default) { $default } else { '(none)' }) + ')') | Out-Null
+    $lines.Add('Columns: name  label  [tokens]  platform-hint') | Out-Null
     $lines.Add('') | Out-Null
     foreach ($entry in ($presets.GetEnumerator() | Sort-Object Name)) {
         $p = $entry.Value
@@ -1530,6 +1593,9 @@ function Get-VibeLaunchListText {
             $lines.Add("  $($p.notes)") | Out-Null
         }
     }
+    $lines.Add('') | Out-Null
+    $lines.Add('VL flags (not passed to agents): --force | --dry-run | --wait | --gui | --cols N | --rows N | --hide-console | --show-console | -- <agent args>') | Out-Null
+    $lines.Add('Help: vibelaunch help   |   Docs: README.md, docs/VIBEKEYS_REMOTE.md') | Out-Null
     $lines -join "`n"
 }
 
@@ -1778,6 +1844,10 @@ function Invoke-VibeLaunchMain {
             Write-Host (Get-VibeLaunchListText)
             return 0
         }
+        { $_ -in @('help', '--help', '-h', '/?') } {
+            Write-Host (Get-VibeLaunchHelpText)
+            return 0
+        }
         'status' {
             if ($rest -contains '--json') {
                 Write-Host ((Get-VibeLaunchStatusObject -Config $cfg) | ConvertTo-Json -Depth 6 -Compress)
@@ -1917,6 +1987,7 @@ Export-ModuleMember -Function @(
     'Test-VibeLaunchKeypadReadiness',
     'Get-VibeLaunchWebUrl',
     'Get-VibeLaunchListText',
+    'Get-VibeLaunchHelpText',
     'Stop-VibeLaunchSession',
     'Start-VibeLaunchSession',
     'Invoke-VibeLaunchMain',

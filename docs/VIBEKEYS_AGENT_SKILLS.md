@@ -28,7 +28,7 @@ A session-control skill should call the Windows `vibelaunch` CLI and never hand-
 | Path | Presets | Docs |
 |------|---------|------|
 | **Hermes ACP client** (sit inside Cursor/Claude/Codex) | `hermes-acp-cursor`, `hermes-acp-claude`, `hermes-acp-codex` | [HERMES_ACP_CLIENT.md](HERMES_ACP_CLIENT.md); design [#5257](https://github.com/NousResearch/hermes-agent/issues/5257), active successor [#68222](https://github.com/NousResearch/hermes-agent/pull/68222) |
-| **OpenClaw ACP harness** | `openclaw-cursor-workspace`, `openclaw-codex-workspace` | OpenClaw ACP docs; requires local harness config |
+| **OpenClaw ACP harness** | `openclaw-cursor-workspace`, `openclaw-codex-workspace` | [OPENCLAW_ACP.md](OPENCLAW_ACP.md); upstream [ACP agents](https://docs.openclaw.ai/tools/acp-agents) — requires local acpx + allowlist + agent auth |
 
 ## Keypad UX skills
 

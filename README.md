@@ -76,12 +76,26 @@ Hybrid tokens resolve the same presets: `codex workspace`, `hermes`, `openclaw`,
 
 `--force` is **VibeLaunch-only** — kills the existing vibetty tree and switches preset. Never pass `--force` to spawned CLIs (OpenClaw/Hermes/Codex do not accept it).
 
+Other VibeLaunch-only launch flags (see `vibelaunch help`):
+
+| Flag | Purpose |
+|------|---------|
+| `--force` | Kill existing vibetty on the configured port and switch preset |
+| `--dry-run` | Print resolved cwd/spawn; skip kill prompt and launch |
+| `--wait` | Block in the current console instead of detaching |
+| `--gui` | Apply saved GUI geometry + hide-console preference |
+| `--cols N` / `--rows N` | PTY size at launch (also `--cols=N`) |
+| `--hide-console` / `--show-console` | Hide or show the separate vibetty console window |
+| `-- <args…>` | Passthrough args appended to the preset spawn (agent flags only after `--`) |
+
 Passthrough args to the spawned CLI use `--`:
 
 ```cmd
 vibelaunch claude -- -c --dangerously-skip-permissions
 vibelaunch codex-workspace -- --resume
 ```
+
+`claude-resume` already bakes in `-c --dangerously-skip-permissions` (see `config/presets.json`). Override via `presets.local.json` if you need permission prompts.
 
 Block in the current window instead of a new console: `vibelaunch codex-workspace --wait`.
 
@@ -92,7 +106,7 @@ Block in the current window instead of a new console: `vibelaunch codex-workspac
 | Name | Tokens | Platform | Spawn summary |
 |------|--------|----------|---------------|
 | `claude` | `claude` | Windows | `claude` |
-| `claude-resume` | `claude resume` | Windows | `claude -c` (resume) |
+| `claude-resume` | `claude resume` | Windows | `claude -c --dangerously-skip-permissions` |
 | `codex` | `codex` | Windows | `codex` @ config `cwd` |
 | `codex-workspace` | `codex workspace` | Windows | `codex` @ configured workspace |
 | `cmd-scroll-test` | `cmd scroll test` | Windows | scrollback diagnostic |
@@ -204,7 +218,9 @@ Example preset spawn (OpenClaw Cursor on a configured workspace):
 openclaw tui --message "/acp spawn cursor --cwd /mnt/c/.../Example-Workspace --mode persistent"
 ```
 
-Sources: [OpenClaw TUI CLI](https://docs.openclaw.ai/cli/tui), [ACP agents](https://docs.openclaw.ai/tools/acp-agents).
+Full enablement (acpx plugin, `acp.allowedAgents`, permissions, doctor, Vibetty dry-run, error table): **[docs/OPENCLAW_ACP.md](docs/OPENCLAW_ACP.md)**.
+
+Sources: [OpenClaw TUI CLI](https://docs.openclaw.ai/cli/tui), [ACP agents](https://docs.openclaw.ai/tools/acp-agents), [ACP setup](https://docs.openclaw.ai/tools/acp-agents-setup).
 
 ### Spawn patterns
 
@@ -260,8 +276,9 @@ docs: [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md).
 |---------|---------|
 | `vibelaunch` | Default preset |
 | `vibelaunch <preset\|tokens…>` | Hybrid preset resolution |
+| `vibelaunch help` | Usage + VibeLaunch-only launch flags |
 | `vibelaunch <preset> --dry-run` | Print resolved cwd/spawn without launching (skips kill prompt) |
-| `vibelaunch list` | Presets |
+| `vibelaunch list` | Presets, platform hints, per-preset notes, flag legend |
 | `vibelaunch status` | Port, PID, preset, keypad URL |
 | `vibelaunch stop [--force]` | Kill vibetty tree |
 | `vibelaunch preflight` | PATH, firewall, port |
@@ -272,6 +289,10 @@ docs: [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md).
 | `vibelaunch gui-links` | Help/hardware link URLs + runbook path |
 | `vibelaunch paths --json` | Install paths (presets, PTY presets, user config) |
 | `vibelaunch gui-save --cols N --rows N` | Persist GUI size to `%LOCALAPPDATA%\VibeLaunch\gui.local.json` |
+
+### Launch flags (VibeLaunch-only)
+
+Same flags as `vibelaunch help` / the Daily Presets section: `--force`, `--dry-run`, `--wait`, `--gui`, `--cols`/`--rows`, `--hide-console`/`--show-console`, and `--` passthrough. They are stripped before the agent process starts.
 
 ### GUI launch flags
 
@@ -327,7 +348,7 @@ Copy a skill into your Hermes/OpenClaw skills directory to enable it; VibeLaunch
 |------|-------|
 | **Mid-session preset switch** | Keep vibetty + keypad WebSocket alive; swap PTY child without keypad reconnect. Needs upstream vibetty support or a wrapper — today `--force` relaunches vibetty and the keypad must reconnect. |
 | **Session parking / juggling** | Park multiple agent sessions and hop between them without full restart. Separate from mid-session switch; heavier UX + process model. |
-| OpenClaw ACP presets (`openclaw-cursor-workspace`, `openclaw-codex-workspace`) | Presets exist; needs local harness setup + hardware test |
+| OpenClaw ACP keypad polish | Recipes + enablement documented in [docs/OPENCLAW_ACP.md](docs/OPENCLAW_ACP.md); host must allowlist harness ids and complete agent auth |
 | Hermes ACP presets (`hermes-acp-*`) | Verified stopgap — see [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md); [#5257](https://github.com/NousResearch/hermes-agent/issues/5257) is the design issue and [#68222](https://github.com/NousResearch/hermes-agent/pull/68222) is the active successor |
 | Named session join | Launch into an ongoing Discord / channel session by session key |
 | OpenClaw VibeKeys theming | Compact TUI beyond `vibekeys-openclaw` — see [VIBEKEYS_AGENT_SKILLS.md](docs/VIBEKEYS_AGENT_SKILLS.md) |
@@ -446,7 +467,7 @@ Copy [`config/gui-links.local.json.example`](config/gui-links.local.json.example
 }
 ```
 
-Empty keys hide the matching Connect menu items. Shipped defaults in [`config/gui-links.json`](config/gui-links.json) cover the social links plus VibeKeys docs and runbook path.
+Empty keys hide the matching Connect menu items. Shipped defaults in [`config/gui-links.json`](config/gui-links.json) cover social links plus VibeKeys remote/firmware URLs. The in-app **runbook** path is not a JSON field: `vibelaunch gui-links` resolves it at runtime to `docs/VIBEKEYS_REMOTE.md` under the install root (override with optional `runbookPath` in `%LOCALAPPDATA%\VibeLaunch\gui-links.local.json` if needed).
 
 ### Rebuild
 

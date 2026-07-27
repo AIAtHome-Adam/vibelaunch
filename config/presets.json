@@ -7,7 +7,7 @@
     "spawn": ["claude"],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Fresh Claude Code session. Resume: vibelaunch claude-resume (or claude -c). Add flags via presets.local.json args."
+    "notes": "Fresh Windows Claude Code in workspaces.default. Prereq: claude on PATH + signed in. Resume: vibelaunch claude-resume. Extra agent flags: vibelaunch claude -- <flags> or presets.local.json args. Fail: command not found -> install Claude Code / open a fresh shell."
   },
   "claude-resume": {
     "label": "Claude Code (resume)",
@@ -17,7 +17,7 @@
     "spawn": ["claude"],
     "cwd": "{{workspaces.default}}",
     "args": ["-c", "--dangerously-skip-permissions"],
-    "notes": "Continues the most recent Claude Code session (-c). Same cwd as claude preset."
+    "notes": "Resume last Claude Code session (-c) and auto-approve tools (--dangerously-skip-permissions). Same cwd as claude. Prereq: prior session + claude on PATH. Fail: nothing to resume -> use claude first. To keep permission prompts, override args in presets.local.json."
   },
   "codex": {
     "label": "Codex (config cwd)",
@@ -27,7 +27,7 @@
     "spawn": ["codex"],
     "cwd": "{{cwd}}",
     "args": [],
-    "notes": "Interactive Codex TUI at config cwd (defaults.json cwd / your defaults.local.json)."
+    "notes": "Interactive Windows Codex TUI at config cwd (defaults.json / defaults.local.json cwd). Prereq: codex on PATH + auth. Fail: instant exit -> stale PATH; open a new terminal or run vibelaunch preflight."
   },
   "codex-workspace": {
     "label": "Codex -> example workspace",
@@ -37,7 +37,7 @@
     "spawn": ["codex"],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Codex in the configured example workspace. Override workspaces.default in defaults.local.json."
+    "notes": "Windows Codex in workspaces.default (set in defaults.local.json). Prereq: path exists + codex on PATH. Fail: bad cwd -> fix workspaces.default; instant exit -> PATH (see codex / preflight)."
   },
   "cmd-scroll-test": {
     "label": "cmd.exe scrollback test",
@@ -47,7 +47,7 @@
     "spawn": ["cmd.exe"],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Diagnostic normal-buffer shell. At prompt: for /L %i in (1,1,100) do @echo line %i - then scroll with keypad/PC to verify rows depth."
+    "notes": "Diagnostic cmd.exe only (not an agent) for keypad/PC scroll depth. At prompt: for /L %i in (1,1,100) do @echo line %i - then scroll. Pair with --cols/--rows or GUI PTY size (rows = history depth)."
   },
   "hermes-vk": {
     "label": "Hermes (VibeKeys)",
@@ -63,7 +63,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Auto: WSL if profile wsl.enabled + hermes in WSL, else Windows PATH. Override: vibelaunch hermes wsl | vibelaunch hermes windows."
+    "notes": "Hermes chat + vibekeys-hermes; sets HERMES_VIBEKEYS_SESSION=1. Auto: WSL if wsl.enabled + hermes in WSL, else Windows PATH. Override: vibelaunch hermes wsl | vibelaunch hermes windows. Prereq WSL: wsl.user + hermes in distro. Fail: blank wsl.user -> setup-wsl-remote.ps1; Windows fallback may lack your WSL auth."
   },
   "hermes-vk-wsl": {
     "label": "Hermes (VibeKeys, WSL)",
@@ -76,7 +76,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Force WSL even when Hermes is also on Windows PATH. Requires wsl.user."
+    "notes": "Force WSL Hermes (ignores Windows PATH hermes). Topology: Windows vibetty -> wsl.exe -> hermes. Prereq: wsl.user + hermes in that distro. Fail: placeholder wsl.user -> setup-wsl-remote.ps1; hermes not found -> install/auth in WSL."
   },
   "hermes-vk-win": {
     "label": "Hermes (VibeKeys, Windows)",
@@ -88,7 +88,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Force native Windows Hermes (Hermes Desktop / CLI on PATH). No WSL."
+    "notes": "Force native Windows Hermes only (no WSL). Prereq: Windows hermes on PATH + separate Windows auth. Expected limitation if your live Hermes stack is WSL-only - use hermes-vk-wsl / hermes-vk instead."
   },
   "hermes-codex-workspace": {
     "label": "Hermes + Codex model (WSL)",
@@ -101,7 +101,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "WSL Hermes with Codex model at spawn (-m openai-codex/gpt-5.4). Change model in spawn or use /model inside chat."
+    "notes": "WSL Hermes + vibekeys-hermes with model pin -m openai-codex/gpt-5.4 at spawn (override in presets.local.json or /model in chat). Prereq: WSL hermes + Codex provider auth in WSL. Fail: model/provider errors -> hermes auth or /model; wsl.user -> setup-wsl-remote.ps1."
   },
   "hermes-codex-workspace-win": {
     "label": "Hermes + Codex model (Windows)",
@@ -113,7 +113,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Windows Hermes with Codex model at spawn. WSL Codex auth is separate from Windows user config."
+    "notes": "Windows Hermes with the same Codex model pin. Prereq: Windows hermes on PATH + Windows Codex/provider auth (separate from WSL). Expected limitation when only WSL Hermes is provisioned - prefer hermes-codex-workspace."
   },
   "openclaw-vk": {
     "label": "OpenClaw TUI (vibekeys session)",
@@ -125,7 +125,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "WSL only (no native Windows OpenClaw companion yet). --session vibekeys avoids main-session heartbeat spam."
+    "notes": "WSL-only OpenClaw TUI with --session vibekeys (keypad-friendly; less main-session heartbeat spam). Topology: Windows vibetty -> wsl.exe -> openclaw. Prereq: wsl.user, openclaw in WSL, gateway up. Fail: connection refused -> start OpenClaw gateway (often :18789)."
   },
   "openclaw-tui": {
     "label": "OpenClaw TUI (main session)",
@@ -137,7 +137,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "WSL gateway main session (no --session). Heartbeat/status polls may appear on small screens; prefer openclaw-vk for keypad."
+    "notes": "WSL OpenClaw gateway main session (no --session). Prefer openclaw-vk for keypad; main can spam heartbeat/status on small screens. Same WSL/gateway prereqs as openclaw-vk."
   },
   "openclaw-cursor-workspace": {
     "label": "OpenClaw -> Cursor ACP",
@@ -150,7 +150,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "ACP harness spawn at launch via --message. Requires your OpenClaw ACP config (cursor harness, cwd, auth)."
+    "notes": "WSL-only OpenClaw ACP harness: TUI --message '/acp spawn cursor --cwd {{workspaces.default-wsl}} --mode persistent'. Prereq: gateway up, acpx enabled, cursor in acp.allowedAgents, Cursor agent acp on WSL PATH, workspaces.default-wsl exists. Verify: openclaw tui --message '/acp doctor'. Fail: policy/allowlist -> docs/OPENCLAW_ACP.md; auth -> Cursor agent login in WSL. Not Windows-native."
   },
   "openclaw-codex-workspace": {
     "label": "OpenClaw -> Codex ACP",
@@ -163,7 +163,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "ACP harness id codex per OpenClaw agents docs. Requires local ACP harness + Codex auth in WSL."
+    "notes": "WSL-only OpenClaw ACP harness id codex (explicit ACP path; native /codex is separate). Prereq: acpx + codex in acp.allowedAgents + WSL 'codex login'. Fail: 'not allowed by policy' -> allowlist codex; 401 -> codex login in WSL (Windows auth does not apply). See docs/OPENCLAW_ACP.md."
   },
   "hermes-acp-cursor": {
     "label": "Hermes -> Cursor ACP (drop-in)",
@@ -176,7 +176,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Hermes ACP *client* drop-in to a live Cursor session. Spawns persistent shell; type prompts, 'exit' quits. Requires Cursor Pro `agent` auth. Verified 2026-07-12."
+    "notes": "WSL Hermes ACP *client* drop-in to live Cursor (not OpenClaw /acp). Shell: type prompts; exit quits. Prereq: python3, ~/bin/hermes-acp-client.py (from tools/), Cursor Pro agent auth. Fail: missing client -> copy tools/hermes-acp-client.py; auth -> agent login. See docs/HERMES_ACP_CLIENT.md."
   },
   "hermes-acp-claude": {
     "label": "Hermes -> Claude Code ACP (drop-in)",
@@ -189,7 +189,7 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Hermes ACP *client* drop-in to Claude Code via npx @agentclientprotocol/claude-agent-acp. Requires Node + Claude Pro auth. Verified 2026-07-12."
+    "notes": "WSL drop-in to Claude Code via npx @agentclientprotocol/claude-agent-acp. Prereq: Node, Claude Pro auth, ~/bin/hermes-acp-client.py. Fail: node/npx missing; auth -> claude login. See docs/HERMES_ACP_CLIENT.md."
   },
   "hermes-acp-codex": {
     "label": "Hermes -> Codex ACP (drop-in)",
@@ -202,6 +202,6 @@
     ],
     "cwd": "{{workspaces.default}}",
     "args": [],
-    "notes": "Hermes ACP *client* drop-in to Codex via npx @zed-industries/codex-acp. Requires Node + Codex ChatGPT auth (codex login). NOTE: adapter + handshake verified 2026-07-12; if prompt 401s, run `codex login` (token can be invalidated)."
+    "notes": "WSL drop-in to Codex via npx @zed-industries/codex-acp. Prereq: Node, codex login, ~/bin/hermes-acp-client.py. Fail: 401/token_invalidated -> re-run codex login (account-wide, not adapter). See docs/HERMES_ACP_CLIENT.md."
   }
 }

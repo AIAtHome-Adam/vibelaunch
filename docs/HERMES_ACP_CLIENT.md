@@ -141,6 +141,13 @@ python3 ~/bin/hermes-acp-client.py shell <cursor|claude|codex> \
   --cwd {{workspaces.default-wsl}} --approve
 ```
 
+**Installed-copy workspace:** after `install.ps1`, set real paths in
+`%LOCALAPPDATA%\VibeLaunch\defaults.local.json` (`workspaces.default` +
+`workspaces.default-wsl`). Without that overlay the shipped
+`<windows-user>` placeholders stay unresolved on the Program Files install
+and ACP sandbox cwd is wrong. Repo checkouts auto-derive a workspace from
+the clone location.
+
 Definitions: `config/presets.json`. Skill routes: `/vibekeys hermes-acp-cursor` (etc.).
 
 ## Agent launch commands

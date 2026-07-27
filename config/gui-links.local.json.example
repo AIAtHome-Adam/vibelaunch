@@ -3,5 +3,6 @@
   "youtube": "https://www.youtube.com/@yourchannel",
   "twitter": "https://x.com/yourhandle",
   "buyMeACoffee": "https://buymeacoffee.com/yourname",
-  "linkedin": "https://www.linkedin.com/in/yourprofile"
+  "linkedin": "https://www.linkedin.com/in/yourprofile",
+  "runbookPath": ""
 }
