@@ -125,6 +125,8 @@ Block in the current window instead of a new console: `vibelaunch codex-workspac
 
 `vibelaunch list` shows platform hints and per-preset notes. **`hermes`** auto-picks WSL when `wsl.enabled` and hermes is in WSL, else Windows PATH; override with `hermes wsl` / `hermes windows`. **OpenClaw** presets are WSL-only (no native Windows companion yet).
 
+Filming / QA walkthrough (status, evidence, demo cues for every preset): [docs/PRESET_TEST_TRACKER.md](docs/PRESET_TEST_TRACKER.md).
+
 ---
 
 ## Profiles: Standalone Vs WSL Remote
@@ -389,6 +391,8 @@ See [VIBEKEYS_AGENT_SKILLS.md](docs/VIBEKEYS_AGENT_SKILLS.md) — `/vibekeys`, v
 - [VIBEKEYS_REMOTE.md](docs/VIBEKEYS_REMOTE.md) — public remote-mode runbook (network, ASR, firewall, manual vibetty)
 - [VIBEKEYS_AGENT_SKILLS.md](docs/VIBEKEYS_AGENT_SKILLS.md) — optional agent skill routing notes
 - [HERMES_ACP_CLIENT.md](docs/HERMES_ACP_CLIENT.md) — Hermes ACP *client*: drop into live Cursor/Claude/Codex/Gemini sessions from Hermes
+- [OPENCLAW_ACP.md](docs/OPENCLAW_ACP.md) — OpenClaw ACP harness enablement (allowlist, acpx, doctor)
+- [PRESET_TEST_TRACKER.md](docs/PRESET_TEST_TRACKER.md) — filming walkthrough: all presets, status, evidence, demo cues
 - [vibekeys.dev remote mode](https://vibekeys.dev/docs/remote-mode/)
 
 ---
